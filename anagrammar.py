@@ -3,7 +3,7 @@ from os import system, name
 anagrams = []
 parts = []
 
-clear = lambda: system('cls' if name=='nt' else '#clear')
+clear = lambda: system('cls' if name=='nt' else 'clear')
 
 def totalAnagram(source, check):
     if len(source) != len(check):
@@ -28,7 +28,7 @@ def getNext(part, remaining):
                 isPartial = False
                 break
 
-            if check.count(char) != remaining.count(char):
+            if check.count(char) > remaining.count(char):
                 isPartial = False
                 break
         
@@ -37,7 +37,6 @@ def getNext(part, remaining):
     
     return None
 
-            
 
 #clear()
 print('*** Anagrammar ***')
@@ -65,9 +64,6 @@ with open('words.txt', 'r') as words:
         if partial and len(line) > 1:
             parts.append(line)
         
-        if len(line) != len(sourceWord):
-            total = False
-        
         if totalAnagram(sourceWord, line):
             anagrams.append(line)
 
@@ -77,8 +73,9 @@ for p in parts:
         remaining = sourceWord
         for char in word.lower():
             remaining = remaining.replace(char, '')
-        
+
         workingPartial = getNext(word.lower(), remaining)
+        
         if not workingPartial:
             word = None
             break
@@ -92,6 +89,9 @@ for p in parts:
         anagrams.append(word)
 
 #clear()
-print('Anagrams found:\n')
-for i in anagrams:
-    print(i)
+if not anagrams:
+    print('No anagrams found.')
+else:
+    print('Anagrams found:\n')
+    for i in anagrams:
+        print(i)
