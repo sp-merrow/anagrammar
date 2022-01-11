@@ -18,6 +18,7 @@ def totalAnagram(source, check):
     return True
 
 def getNext(part, remaining):
+    newAnagram = part.capitalize()
     for check in parts:
         if len(check) > len(remaining):
             continue
@@ -33,8 +34,13 @@ def getNext(part, remaining):
                 break
         
         if isPartial:
-            return part.capitalize() + check.capitalize()
-    
+            for char in check:
+                remaining = remaining.replace(char, '', 1)
+
+            newAnagram += check.capitalize()
+
+    if len(remaining) == 0:
+        return newAnagram
     return None
 
 
@@ -61,29 +67,18 @@ with open('words.txt', 'r') as words:
                 partial = False
                 break
         
-        if partial and len(line) > 1:
+        if partial and len(line) > 2:
             parts.append(line)
         
         if totalAnagram(sourceWord, line):
             anagrams.append(line)
 
-for p in parts: 
-    word = p
-    while True:
-        remaining = sourceWord
-        for char in word.lower():
-            remaining = remaining.replace(char, '')
-
-        workingPartial = getNext(word.lower(), remaining)
-        
-        if not workingPartial:
-            word = None
-            break
-        
-        word = workingPartial
-
-        if not remaining:
-            break
+for p in parts:
+    remain = sourceWord
+    for c in p:
+        remain = remain.replace(c, '', 1)
+    word = getNext(p, remain)
+    
     
     if word and (word.lower() not in anagrams):
         anagrams.append(word)
